@@ -1,13 +1,15 @@
-from django.urls import path
+from django.urls import include, path
+from rest_framework import routers
 
 from .controllers import BreedDetail, BreedList, DogDetail, DogList
 
 
+router = routers.DefaultRouter()
+router.register('breeds', BreedList, basename='breed-list')
+router.register('breeds', BreedDetail, basename='breed-detail')
+
 urlpatterns = [
     path('dogs/', DogList.as_view(), name='dog-list'),
     path('dogs/<int:pk>/', DogDetail.as_view(), name='dog-detail'),
-    path('breeds/', BreedList.as_view({'get': 'list', 'post': 'create'}), name='breed-list'),
-    path('breeds/<int:pk>/',
-         BreedDetail.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}),
-         name='breed-detail'),
+    path('', include(router.urls))
 ]
